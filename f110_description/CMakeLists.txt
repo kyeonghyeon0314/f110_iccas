@@ -36,6 +36,7 @@ install(FILES
 
 install(PROGRAMS
   scripts/simple_drive_controller.py
+  scripts/wheel_odometry_publisher.py
   DESTINATION lib/${PROJECT_NAME}
 )
 
