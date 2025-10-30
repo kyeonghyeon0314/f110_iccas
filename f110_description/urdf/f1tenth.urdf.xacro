@@ -337,45 +337,53 @@
 
   
   <gazebo reference="left_rear_wheel">
-    <mu1>1.2</mu1>
-    <mu2>0.8</mu2>
-    <kp>100000.0</kp>
-    <kd>10.0</kd>
+    <mu1>1.5</mu1>
+    <mu2>0.5</mu2>
+    <slip1>0.0</slip1>
+    <slip2>0.05</slip2>
+    <kp>1000000.0</kp>
+    <kd>100.0</kd>
     <fdir1>1 0 0</fdir1>
-    <minDepth>0.001</minDepth>
+    <minDepth>0.003</minDepth>
     <maxVel>10.0</maxVel>
     <self_collide>false</self_collide>
   </gazebo>
 
   <gazebo reference="right_rear_wheel">
-    <mu1>1.2</mu1>
-    <mu2>0.8</mu2>
-    <kp>100000.0</kp>
-    <kd>10.0</kd>
+    <mu1>1.5</mu1>
+    <mu2>0.5</mu2>
+    <slip1>0.0</slip1>
+    <slip2>0.05</slip2>
+    <kp>1000000.0</kp>
+    <kd>100.0</kd>
     <fdir1>1 0 0</fdir1>
-    <minDepth>0.001</minDepth>
+    <minDepth>0.003</minDepth>
     <maxVel>10.0</maxVel>
     <self_collide>false</self_collide>
   </gazebo>
 
   <gazebo reference="left_front_wheel">
-    <mu1>0.5</mu1>
-    <mu2>1.5</mu2>
-    <kp>100000.0</kp>
-    <kd>10.0</kd>
+    <mu1>0.2</mu1>
+    <mu2>10.0</mu2>
+    <slip1>0.0</slip1>
+    <slip2>0.0</slip2>
+    <kp>10000000.0</kp>
+    <kd>100.0</kd>
     <fdir1>1 0 0</fdir1>
-    <minDepth>0.001</minDepth>
+    <minDepth>0.005</minDepth>
     <maxVel>10.0</maxVel>
     <self_collide>false</self_collide>
   </gazebo>
 
   <gazebo reference="right_front_wheel">
-    <mu1>0.5</mu1>
-    <mu2>1.5</mu2>
-    <kp>100000.0</kp>
-    <kd>10.0</kd>
+    <mu1>0.2</mu1>
+    <mu2>10.0</mu2>
+    <slip1>0.0</slip1>
+    <slip2>0.0</slip2>
+    <kp>10000000.0</kp>
+    <kd>100.0</kd>
     <fdir1>1 0 0</fdir1>
-    <minDepth>0.001</minDepth>
+    <minDepth>0.005</minDepth>
     <maxVel>10.0</maxVel>
     <self_collide>false</self_collide>
   </gazebo>

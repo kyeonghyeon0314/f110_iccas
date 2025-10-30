@@ -67,6 +67,13 @@ def generate_launch_description():
         output='screen'
     )
 
+    wheel_odometry_publisher = Node(
+        package='f110_description',
+        executable='wheel_odometry_publisher.py',
+        name='wheel_odometry_publisher',
+        output='screen'
+    )
+
     joint_state_broadcaster_spawner = Node(
         package='controller_manager',
         executable='spawner',
@@ -119,5 +126,6 @@ def generate_launch_description():
         robot_state_publisher,
         spawn_entity,
         simple_drive_controller,
+        wheel_odometry_publisher,
         controller_spawner_sequence,
     ])
