@@ -7,19 +7,19 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
-    pkg_share = get_package_share_directory('your_package_name')
+    pkg_share = get_package_share_directory('localization')
     nav2_bringup_dir = get_package_share_directory('nav2_bringup')
     
     # 설정 파일 경로
     ekf_config = os.path.join(pkg_share, 'config', 'ekf.yaml')
-    amcl_config = os.path.join(pkg_share, 'config', 'acml.yaml')
-    map_file = os.path.join(pkg_share, 'maps', 'iccas_f110.yaml')
+    amcl_config = os.path.join(pkg_share, 'config', 'amcl.yaml')
+    map_file = os.path.join(pkg_share, 'maps', 'underground/underground_map.yaml')
     
     return LaunchDescription([
         # 시뮬레이션 시간 사용 여부
         DeclareLaunchArgument(
             'use_sim_time',
-            default_value='true',
+            default_value='false',
             description='Use simulation time'
         ),
         
@@ -50,10 +50,7 @@ def generate_launch_description():
             output='screen',
             parameters=[
                 amcl_config,
-                {
-                    'use_sim_time': LaunchConfiguration('use_sim_time'),
-                    'yaml_filename': LaunchConfiguration('map')
-                }
+                {'use_sim_time': LaunchConfiguration('use_sim_time')}
             ]
         ),
         
