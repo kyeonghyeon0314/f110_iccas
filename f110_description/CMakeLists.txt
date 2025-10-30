@@ -37,6 +37,7 @@ install(FILES
 install(PROGRAMS
   scripts/simple_drive_controller.py
   scripts/wheel_odometry_publisher.py
+  scripts/imu_republisher.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

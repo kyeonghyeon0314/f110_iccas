@@ -18,6 +18,8 @@ class WheelOdometryPublisher(Node):
         self.WHEELBASE = 0.3302     # meters
         self.TRACK_WIDTH = 0.2413   # meters
 
+        self.publish_tf = self.declare_parameter('publish_tf', False).value
+
         # Odometry state
         self.x = 0.0
         self.y = 0.0
@@ -199,7 +201,8 @@ class WheelOdometryPublisher(Node):
         t.transform.translation.z = 0.0
         t.transform.rotation = self.quaternion_from_euler(0, 0, self.theta)
 
-        self.tf_broadcaster.sendTransform(t)
+        if self.publish_tf:
+            self.tf_broadcaster.sendTransform(t)
 
 def main(args=None):
     rclpy.init(args=args)

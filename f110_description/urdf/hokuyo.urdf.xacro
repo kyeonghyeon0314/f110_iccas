@@ -68,6 +68,7 @@
         <plugin name="gazebo_ros_${name}_controller" filename="libgazebo_ros_ray_sensor.so">
           <ros>
             <remapping>~/out:=${topic}</remapping>
+            <parameter name="use_sim_time" type="bool">true</parameter>
           </ros>
           <output_type>sensor_msgs/LaserScan</output_type>
           <frame_name>${name}_link</frame_name>

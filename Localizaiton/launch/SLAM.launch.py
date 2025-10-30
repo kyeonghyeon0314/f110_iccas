@@ -6,10 +6,10 @@ from launch_ros.actions import Node
 from ament_index_python.packages import get_package_share_directory
 
 def generate_launch_description():
-    pkg_share = get_package_share_directory('your_package_name')
+    pkg_share = get_package_share_directory('localizaiton')
     
     ekf_config = os.path.join(pkg_share, 'config', 'ekf.yaml')
-    slam_config = os.path.join(pkg_share, 'config', 'mapper_params_online_async.yaml')
+    slam_config = os.path.join(pkg_share, 'config', 'online_async.yaml')
     
     return LaunchDescription([
         DeclareLaunchArgument(

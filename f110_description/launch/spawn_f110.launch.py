@@ -1,7 +1,8 @@
 import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, SetEnvironmentVariable, TimerAction
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, SetEnvironmentVariable, TimerAction
+from launch.substitutions import LaunchConfiguration
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 import xacro
@@ -9,6 +10,12 @@ import xacro
 def generate_launch_description():
     pkg_f110_description = get_package_share_directory('f110_description')
     pkg_gazebo_ros = get_package_share_directory('gazebo_ros')
+
+    use_sim_time_arg = DeclareLaunchArgument(
+        'use_sim_time',
+        default_value='true',
+        description='Use simulated clock for all F110 nodes'
+    )
 
     # Set Gazebo model path
     models_path = os.path.join(pkg_f110_description, 'models')
@@ -48,7 +55,8 @@ def generate_launch_description():
             '-z', '0.18',  # 바퀴 반지름(0.0508m)보다 충분히 높게
             '-Y', '0.0'
         ],
-        output='screen'
+        output='screen',
+        parameters=[{'use_sim_time': LaunchConfiguration('use_sim_time')}]
     )
 
     # Robot state publisher
@@ -57,56 +65,74 @@ def generate_launch_description():
         executable='robot_state_publisher',
         name='robot_state_publisher',
         output='screen',
-        parameters=[{'robot_description': robot_description}]
+        parameters=[
+            {'robot_description': robot_description},
+            {'use_sim_time': LaunchConfiguration('use_sim_time')}
+        ]
     )
 
     simple_drive_controller = Node(
         package='f110_description',
         executable='simple_drive_controller.py',
         name='simple_drive_controller',
-        output='screen'
+        output='screen',
+        parameters=[{'use_sim_time': LaunchConfiguration('use_sim_time')}]
     )
 
     wheel_odometry_publisher = Node(
         package='f110_description',
         executable='wheel_odometry_publisher.py',
         name='wheel_odometry_publisher',
-        output='screen'
+        output='screen',
+        parameters=[{'use_sim_time': LaunchConfiguration('use_sim_time'), 'publish_tf': False}]
+    )
+
+    imu_republisher = Node(
+        package='f110_description',
+        executable='imu_republisher.py',
+        name='imu_republisher',
+        output='screen',
+        parameters=[{'use_sim_time': LaunchConfiguration('use_sim_time')}]
     )
 
     joint_state_broadcaster_spawner = Node(
         package='controller_manager',
         executable='spawner',
         arguments=['joint_state_broadcaster'],
-        output='screen'
+        output='screen',
+        parameters=[{'use_sim_time': LaunchConfiguration('use_sim_time')}]
     )
 
     left_rear_wheel_velocity_spawner = Node(
         package='controller_manager',
         executable='spawner',
         arguments=['left_rear_wheel_velocity_controller'],
-        output='screen'
+        output='screen',
+        parameters=[{'use_sim_time': LaunchConfiguration('use_sim_time')}]
     )
 
     right_rear_wheel_velocity_spawner = Node(
         package='controller_manager',
         executable='spawner',
         arguments=['right_rear_wheel_velocity_controller'],
-        output='screen'
+        output='screen',
+        parameters=[{'use_sim_time': LaunchConfiguration('use_sim_time')}]
     )
 
     left_steering_spawner = Node(
         package='controller_manager',
         executable='spawner',
         arguments=['left_steering_controller'],
-        output='screen'
+        output='screen',
+        parameters=[{'use_sim_time': LaunchConfiguration('use_sim_time')}]
     )
 
     right_steering_spawner = Node(
         package='controller_manager',
         executable='spawner',
         arguments=['right_steering_controller'],
-        output='screen'
+        output='screen',
+        parameters=[{'use_sim_time': LaunchConfiguration('use_sim_time')}]
     )
 
     controller_spawner_sequence = TimerAction(
@@ -121,11 +147,13 @@ def generate_launch_description():
     )
 
     return LaunchDescription([
+        use_sim_time_arg,
         gazebo_model_path,
         gazebo,
         robot_state_publisher,
         spawn_entity,
         simple_drive_controller,
         wheel_odometry_publisher,
+        imu_republisher,
         controller_spawner_sequence,
     ])
