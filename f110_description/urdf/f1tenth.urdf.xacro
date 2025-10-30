@@ -25,24 +25,9 @@ Vehicle: Traxxas Fiesta ST Rally 1/10 Scale
   </material>
 
   <!-- ============================================ -->
-  <!-- Base Footprint (Dummy Root Link for KDL) -->
+  <!-- Base Link (Chassis) - Root Link -->
   <!-- ============================================ -->
-  <!-- This is a dummy link with no inertia to satisfy KDL requirements -->
-  <link name="base_footprint">
-    <!-- No inertial, visual, or collision - just a reference frame -->
-  </link>
-
-  <!-- Fixed joint connecting base_footprint to base_link -->
-  <joint name="base_footprint_joint" type="fixed">
-    <parent link="base_footprint"/>
-    <child link="base_link"/>
-    <!-- base_link origin is at ground level, same as base_footprint -->
-    <origin xyz="0 0 0" rpy="0 0 0"/>
-  </joint>
-
-  <!-- ============================================ -->
-  <!-- Base Link (Chassis) -->
-  <!-- ============================================ -->
+  <!-- Note: KDL warning "root link has inertia" is harmless and can be ignored -->
   <link name="base_link">
     <inertial>
       <origin xyz="0.165 0 0.09" rpy="0 0 0"/>
@@ -121,14 +106,14 @@ Vehicle: Traxxas Fiesta ST Rally 1/10 Scale
   </gazebo>
 
   <!-- ============================================ -->
-  <!-- Steering Wheel (dummy joint for Ackermann plugin) -->
+  <!-- Virtual Steering Wheel (Required by gazebo_ros_ackermann_drive) -->
   <!-- ============================================ -->
   <joint name="steering_wheel_joint" type="revolute">
     <parent link="base_link"/>
     <child link="steering_wheel_link"/>
     <origin xyz="0.15 0 0.25" rpy="0 0 0"/>
     <axis xyz="0 0 1"/>
-    <limit lower="-6.283" upper="6.283" effort="5.0" velocity="4.0"/>
+    <limit lower="-6.283" upper="6.283" effort="100.0" velocity="10.0"/>
   </joint>
 
   <link name="steering_wheel_link">
@@ -189,7 +174,7 @@ Vehicle: Traxxas Fiesta ST Rally 1/10 Scale
     <parent link="base_link"/>
     <child link="right_rear_wheel"/>
     <origin xyz="0 -0.12065 0.0508" rpy="0 0 0"/>
-    <axis xyz="0 1 0"/>
+    <axis xyz="0 -1 0"/>
     <dynamics damping="0.1" friction="0.1"/>
   </joint>
 
@@ -232,8 +217,8 @@ Vehicle: Traxxas Fiesta ST Rally 1/10 Scale
     <child link="left_steering_hinge"/>
     <origin xyz="0.3302 0.12065 0.0508" rpy="0 0 0"/>
     <axis xyz="0 0 1"/>  <!-- Steering axis (vertical) -->
-    <limit lower="-0.4189" upper="0.4189" effort="10.0" velocity="3.2"/>  <!-- ±24°, from F1TENTH Gym -->
-    <dynamics damping="0.7" friction="0.5"/>
+    <limit lower="-0.4189" upper="0.4189" effort="10.0" velocity="3.2"/>
+    <dynamics damping="0.7" friction="1.0"/>
   </joint>
 
   <link name="left_steering_hinge">
@@ -253,7 +238,7 @@ Vehicle: Traxxas Fiesta ST Rally 1/10 Scale
     <child link="left_front_wheel"/>
     <origin xyz="0 0 0" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
-    <dynamics damping="0.1" friction="0.1"/>
+    <dynamics damping="0.5" friction="1.0"/>
   </joint>
 
   <link name="left_front_wheel">
@@ -292,7 +277,7 @@ Vehicle: Traxxas Fiesta ST Rally 1/10 Scale
     <origin xyz="0.3302 -0.12065 0.0508" rpy="0 0 0"/>
     <axis xyz="0 0 1"/>
     <limit lower="-0.4189" upper="0.4189" effort="10.0" velocity="3.2"/>
-    <dynamics damping="0.7" friction="0.5"/>
+    <dynamics damping="0.7" friction="1.0"/>
   </joint>
 
   <link name="right_steering_hinge">
@@ -311,8 +296,8 @@ Vehicle: Traxxas Fiesta ST Rally 1/10 Scale
     <parent link="right_steering_hinge"/>
     <child link="right_front_wheel"/>
     <origin xyz="0 0 0" rpy="0 0 0"/>
-    <axis xyz="0 1 0"/>
-    <dynamics damping="0.1" friction="0.1"/>
+    <axis xyz="0 -1 0"/>
+    <dynamics damping="0.5" friction="1.0"/>
   </joint>
 
   <link name="right_front_wheel">
@@ -361,7 +346,7 @@ Vehicle: Traxxas Fiesta ST Rally 1/10 Scale
     <kp>10000000.0</kp>
     <kd>1.0</kd>
     <minDepth>0.005</minDepth>
-    <maxVel>0.1</maxVel>
+    <maxVel>100.0</maxVel>
     <self_collide>false</self_collide>
   </gazebo>
 
@@ -371,7 +356,7 @@ Vehicle: Traxxas Fiesta ST Rally 1/10 Scale
     <kp>10000000.0</kp>
     <kd>1.0</kd>
     <minDepth>0.005</minDepth>
-    <maxVel>0.1</maxVel>
+    <maxVel>100.0</maxVel>
     <self_collide>false</self_collide>
   </gazebo>
 
@@ -381,7 +366,7 @@ Vehicle: Traxxas Fiesta ST Rally 1/10 Scale
     <kp>10000000.0</kp>
     <kd>1.0</kd>
     <minDepth>0.005</minDepth>
-    <maxVel>0.1</maxVel>
+    <maxVel>100.0</maxVel>
     <self_collide>false</self_collide>
   </gazebo>
 
@@ -391,75 +376,58 @@ Vehicle: Traxxas Fiesta ST Rally 1/10 Scale
     <kp>10000000.0</kp>
     <kd>1.0</kd>
     <minDepth>0.005</minDepth>
-    <maxVel>0.1</maxVel>
+    <maxVel>100.0</maxVel>
     <self_collide>false</self_collide>
   </gazebo>
 
   <!-- ============================================ -->
-  <!-- ros2_control Configuration -->
+  <!-- Joint State Publisher Plugin -->
   <!-- ============================================ -->
-  <ros2_control name="f1tenth_system" type="system">
-    <hardware>
-      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
-    </hardware>
-
-    <!-- Rear Wheels (Traction/Drive) -->
-    <joint name="left_rear_wheel_joint">
-      <command_interface name="velocity">
-        <param name="min">-50</param>
-        <param name="max">50</param>
-      </command_interface>
-      <state_interface name="position"/>
-      <state_interface name="velocity"/>
-    </joint>
-
-    <joint name="right_rear_wheel_joint">
-      <command_interface name="velocity">
-        <param name="min">-50</param>
-        <param name="max">50</param>
-      </command_interface>
-      <state_interface name="position"/>
-      <state_interface name="velocity"/>
-    </joint>
-
-    <!-- Front Wheels (Passive rotation) -->
-    <joint name="left_front_wheel_joint">
-      <state_interface name="position"/>
-      <state_interface name="velocity"/>
-    </joint>
-
-    <joint name="right_front_wheel_joint">
-      <state_interface name="position"/>
-      <state_interface name="velocity"/>
-    </joint>
-
-    <!-- Steering Joints (Position control) -->
-    <joint name="left_steering_hinge_joint">
-      <command_interface name="position">
-        <param name="min">-0.4189</param>
-        <param name="max">0.4189</param>
-      </command_interface>
-      <state_interface name="position"/>
-      <state_interface name="velocity"/>
-    </joint>
-
-    <joint name="right_steering_hinge_joint">
-      <command_interface name="position">
-        <param name="min">-0.4189</param>
-        <param name="max">0.4189</param>
-      </command_interface>
-      <state_interface name="position"/>
-      <state_interface name="velocity"/>
-    </joint>
-  </ros2_control>
-
-  <!-- Gazebo ros2_control Plugin -->
   <gazebo>
-    <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
+    <plugin name="gazebo_ros_joint_state_publisher" filename="libgazebo_ros_joint_state_publisher.so">
+      <update_rate>50</update_rate>
+      <joint_name>left_rear_wheel_joint</joint_name>
+      <joint_name>right_rear_wheel_joint</joint_name>
+      <joint_name>left_front_wheel_joint</joint_name>
+      <joint_name>right_front_wheel_joint</joint_name>
+      <joint_name>left_steering_hinge_joint</joint_name>
+      <joint_name>right_steering_hinge_joint</joint_name>
+    </plugin>
+  </gazebo>
+
+  <!-- ============================================ -->
+  <!-- F1TENTH Ackermann Drive Plugin -->
+  <!-- ============================================ -->
+  <gazebo>
+    <plugin name="f1tenth_drive_plugin" filename="libf1tenth_drive_plugin.so">
       <ros>
         <namespace>/</namespace>
-        <remapping>/robot_description:=/robot_description</remapping>
       </ros>
+
+      <!-- Update rate -->
+      <update_rate>100.0</update_rate>
+
+      <!-- Wheel joints -->
+      <front_left_wheel_joint>left_front_wheel_joint</front_left_wheel_joint>
+      <front_right_wheel_joint>right_front_wheel_joint</front_right_wheel_joint>
+      <rear_left_wheel_joint>left_rear_wheel_joint</rear_left_wheel_joint>
+      <rear_right_wheel_joint>right_rear_wheel_joint</rear_right_wheel_joint>
+
+      <!-- Steering joints -->
+      <front_left_steering_joint>left_steering_hinge_joint</front_left_steering_joint>
+      <front_right_steering_joint>right_steering_hinge_joint</front_right_steering_joint>
+
+      <!-- Vehicle parameters -->
+      <wheelbase>0.3302</wheelbase>
+      <track_width>0.2413</track_width>
+      <wheel_radius>0.0508</wheel_radius>
+
+      <!-- Steering limits -->
+      <max_steer_angle>0.4189</max_steer_angle>
+      
+      <!-- Control parameters -->
+      <!-- Flip wheel rotation if measured sign is opposite (1.0 or -1.0) -->
+      <wheel_rotation_sign>-1.0</wheel_rotation_sign>
     </plugin>
   </gazebo>
 
