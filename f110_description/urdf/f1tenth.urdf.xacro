@@ -174,7 +174,7 @@ Vehicle: Traxxas Fiesta ST Rally 1/10 Scale
     <parent link="base_link"/>
     <child link="right_rear_wheel"/>
     <origin xyz="0 -0.12065 0.0508" rpy="0 0 0"/>
-    <axis xyz="0 -1 0"/>
+    <axis xyz="0 1 0"/>
     <dynamics damping="0.1" friction="0.1"/>
   </joint>
 
@@ -238,7 +238,7 @@ Vehicle: Traxxas Fiesta ST Rally 1/10 Scale
     <child link="left_front_wheel"/>
     <origin xyz="0 0 0" rpy="0 0 0"/>
     <axis xyz="0 1 0"/>
-    <dynamics damping="0.5" friction="1.0"/>
+    <dynamics damping="0.0" friction="0.0"/>
   </joint>
 
   <link name="left_front_wheel">
@@ -296,8 +296,8 @@ Vehicle: Traxxas Fiesta ST Rally 1/10 Scale
     <parent link="right_steering_hinge"/>
     <child link="right_front_wheel"/>
     <origin xyz="0 0 0" rpy="0 0 0"/>
-    <axis xyz="0 -1 0"/>
-    <dynamics damping="0.5" friction="1.0"/>
+    <axis xyz="0 1 0"/>
+    <dynamics damping="0.0" friction="0.0"/>
   </joint>
 
   <link name="right_front_wheel">

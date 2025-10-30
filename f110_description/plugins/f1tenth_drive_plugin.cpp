@@ -143,8 +143,8 @@ namespace gazebo
         // Straight line
         left_steer = 0.0;
         right_steer = 0.0;
-        left_wheel_speed = this->wheel_rotation_sign_ * (this->target_speed_ / this->wheel_radius_);
-        right_wheel_speed = this->wheel_rotation_sign_ * (this->target_speed_ / this->wheel_radius_);
+        left_wheel_speed = (this->target_speed_ / this->wheel_radius_);
+        right_wheel_speed = (this->target_speed_ / this->wheel_radius_);
       }
       else
       {
@@ -170,9 +170,9 @@ namespace gazebo
         double left_linear_vel = this->target_speed_ - (this->track_width_ / 2.0) * angular_vel;
         double right_linear_vel = this->target_speed_ + (this->track_width_ / 2.0) * angular_vel;
 
-        // Convert to wheel angular velocity
-        left_wheel_speed = this->wheel_rotation_sign_ * (left_linear_vel / this->wheel_radius_);
-        right_wheel_speed = this->wheel_rotation_sign_ * (right_linear_vel / this->wheel_radius_);
+        // Convert to wheel angular velocity (desired, in vehicle-forward convention)
+        left_wheel_speed = (left_linear_vel / this->wheel_radius_);
+        right_wheel_speed = (right_linear_vel / this->wheel_radius_);
       }
       // For older Gazebo, use PID with high gains
       double current_left_steer = this->front_left_steering_joint_->Position(0);
@@ -187,9 +187,13 @@ namespace gazebo
 
 
       // Apply wheel velocities - use PD control with limited torque
-      // Get current velocities
-      double current_left_vel = this->rear_left_wheel_joint_->GetVelocity(0);
-      double current_right_vel = this->rear_right_wheel_joint_->GetVelocity(0);
+      // Get current velocities (raw, in joint axis convention)
+      double current_left_vel_raw = this->rear_left_wheel_joint_->GetVelocity(0);
+      double current_right_vel_raw = this->rear_right_wheel_joint_->GetVelocity(0);
+
+      // Correct measured sign to vehicle-forward convention
+      double current_left_vel = this->wheel_rotation_sign_ * current_left_vel_raw;
+      double current_right_vel = this->wheel_rotation_sign_ * current_right_vel_raw;
 
       // Calculate velocity error
       double left_vel_error = left_wheel_speed - current_left_vel;
@@ -215,6 +219,10 @@ namespace gazebo
       double left_force = std::max(-max_wheel_force, std::min(max_wheel_force, left_force_pd));
       double right_force = std::max(-max_wheel_force, std::min(max_wheel_force, right_force_pd));
 
+      // Map control output back to joint axis convention
+      left_force *= this->wheel_rotation_sign_;
+      right_force *= this->wheel_rotation_sign_;
+
       this->rear_left_wheel_joint_->SetForce(0, left_force);
       this->rear_right_wheel_joint_->SetForce(0, right_force);
 
@@ -228,8 +236,8 @@ namespace gazebo
         // Get all wheel velocities
         double fl_vel = this->front_left_wheel_joint_->GetVelocity(0);
         double fr_vel = this->front_right_wheel_joint_->GetVelocity(0);
-        double rl_vel = this->rear_left_wheel_joint_->GetVelocity(0);
-        double rr_vel = this->rear_right_wheel_joint_->GetVelocity(0);
+        double rl_vel = current_left_vel_raw;
+        double rr_vel = current_right_vel_raw;
         
         RCLCPP_INFO(this->ros_node_->get_logger(),
           "Wheel Velocities (rad/s) - FL:%.2f FR:%.2f RL:%.2f RR:%.2f | "
