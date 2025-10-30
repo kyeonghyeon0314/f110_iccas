@@ -18,26 +18,34 @@ controller_manager:
     right_steering_controller:
       type: forward_command_controller/ForwardCommandController
 
+joint_state_broadcaster:
+  ros__parameters:
+    use_sim_time: true
+
 left_rear_wheel_velocity_controller:
   ros__parameters:
+    use_sim_time: true
     joints:
       - left_rear_wheel_joint
     interface_name: velocity
 
 right_rear_wheel_velocity_controller:
   ros__parameters:
+    use_sim_time: true
     joints:
       - right_rear_wheel_joint
     interface_name: velocity
 
 left_steering_controller:
   ros__parameters:
+    use_sim_time: true
     joints:
       - left_steering_hinge_joint
     interface_name: position
 
 right_steering_controller:
   ros__parameters:
+    use_sim_time: true
     joints:
       - right_steering_hinge_joint
     interface_name: position
