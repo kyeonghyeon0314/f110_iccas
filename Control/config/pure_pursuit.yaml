@@ -1,0 +1,12 @@
+closed_loop_path_tracker:
+  ros__parameters:
+    lookahead_distance: 0.8
+    max_linear_vel: 1.0
+    max_angular_vel: 2.0
+    wheelbase: 0.33
+    
+    kp_cte: 0.5
+    ki_cte: 0.05
+    kd_cte: 0.15
+    cte_threshold: 0.3
+    max_steering_angle: 0.4189  # 24 degrees in radians

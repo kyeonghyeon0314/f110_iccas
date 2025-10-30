@@ -1,0 +1,43 @@
+controller_manager:
+  ros__parameters:
+    update_rate: 100
+    use_sim_time: true
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+    left_rear_wheel_velocity_controller:
+      type: forward_command_controller/ForwardCommandController
+
+    right_rear_wheel_velocity_controller:
+      type: forward_command_controller/ForwardCommandController
+
+    left_steering_controller:
+      type: forward_command_controller/ForwardCommandController
+
+    right_steering_controller:
+      type: forward_command_controller/ForwardCommandController
+
+left_rear_wheel_velocity_controller:
+  ros__parameters:
+    joints:
+      - left_rear_wheel_joint
+    interface_name: velocity
+
+right_rear_wheel_velocity_controller:
+  ros__parameters:
+    joints:
+      - right_rear_wheel_joint
+    interface_name: velocity
+
+left_steering_controller:
+  ros__parameters:
+    joints:
+      - left_steering_hinge_joint
+    interface_name: position
+
+right_steering_controller:
+  ros__parameters:
+    joints:
+      - right_steering_hinge_joint
+    interface_name: position

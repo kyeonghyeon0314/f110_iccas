@@ -1,7 +1,7 @@
 import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import IncludeLaunchDescription, SetEnvironmentVariable
+from launch.actions import IncludeLaunchDescription, SetEnvironmentVariable, TimerAction
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 import xacro
@@ -60,9 +60,64 @@ def generate_launch_description():
         parameters=[{'robot_description': robot_description}]
     )
 
+    simple_drive_controller = Node(
+        package='f110_description',
+        executable='simple_drive_controller.py',
+        name='simple_drive_controller',
+        output='screen'
+    )
+
+    joint_state_broadcaster_spawner = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['joint_state_broadcaster'],
+        output='screen'
+    )
+
+    left_rear_wheel_velocity_spawner = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['left_rear_wheel_velocity_controller'],
+        output='screen'
+    )
+
+    right_rear_wheel_velocity_spawner = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['right_rear_wheel_velocity_controller'],
+        output='screen'
+    )
+
+    left_steering_spawner = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['left_steering_controller'],
+        output='screen'
+    )
+
+    right_steering_spawner = Node(
+        package='controller_manager',
+        executable='spawner',
+        arguments=['right_steering_controller'],
+        output='screen'
+    )
+
+    controller_spawner_sequence = TimerAction(
+        period=2.0,
+        actions=[
+            joint_state_broadcaster_spawner,
+            left_rear_wheel_velocity_spawner,
+            right_rear_wheel_velocity_spawner,
+            left_steering_spawner,
+            right_steering_spawner,
+        ]
+    )
+
     return LaunchDescription([
         gazebo_model_path,
         gazebo,
         robot_state_publisher,
         spawn_entity,
+        simple_drive_controller,
+        controller_spawner_sequence,
     ])
