@@ -16,9 +16,14 @@ install(DIRECTORY
   DESTINATION share/${PROJECT_NAME}/
 )
 
-# Install URDF and world files
+# Install URDF directory
+install(DIRECTORY
+  urdf
+  DESTINATION share/${PROJECT_NAME}/
+)
+
+# Install world files
 install(FILES
-  f1tenth.urdf
   iccas_f110.world
   DESTINATION share/${PROJECT_NAME}
 )
