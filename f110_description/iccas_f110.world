@@ -2833,10 +2833,10 @@
       <pose>8.1679 -3.29028 0 0 -0 1.57</pose>
     </model>
     <state world_name='default'>
-      <sim_time>460 212000000</sim_time>
-      <real_time>461 422577019</real_time>
-      <wall_time>1761785182 696276013</wall_time>
-      <iterations>460212</iterations>
+      <sim_time>558 492000000</sim_time>
+      <real_time>98 449644677</real_time>
+      <wall_time>1761791160 115158192</wall_time>
+      <iterations>98280</iterations>
       <model name='asphalt_plane'>
         <pose>0 0 0 0 -0 0</pose>
         <scale>1 1 1</scale>
@@ -2998,10 +2998,10 @@
         </link>
       </model>
       <model name='jersey_barrier_clone_8_clone_2'>
-        <pose>0 4 0 0 -0 1.57</pose>
+        <pose>0 -4 0 0 -0 1.57</pose>
         <scale>1 1 1</scale>
         <link name='link'>
-          <pose>0 4 0 0 -0 1.57</pose>
+          <pose>0 -4 0 0 -0 1.57</pose>
           <velocity>0 0 0 0 -0 0</velocity>
           <acceleration>0 0 0 0 -0 0</acceleration>
           <wrench>0 0 0 0 -0 0</wrench>
@@ -3053,7 +3053,7 @@
     </state>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose>21.7598 5.87992 60.9344 -0 1.3058 2.88737</pose>
+        <pose>25.1277 -4.33187 27.9905 0 0.9018 2.95537</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>
