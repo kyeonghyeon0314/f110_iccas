@@ -11,6 +11,9 @@
   <depend>gazebo_ros</depend>
   <depend>robot_state_publisher</depend>
   <depend>xacro</depend>
+  <depend>gazebo_dev</depend>
+  <depend>rclcpp</depend>
+  <depend>ackermann_msgs</depend>
 
   <export>
     <build_type>ament_cmake</build_type>
