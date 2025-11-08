@@ -9,3 +9,5 @@ colcon build --symlink-install
 ros2 topic pub /drive ackermann_msgs/msg/AckermannDriveStamped "{drive: {speed: 2.0, steering_angle: 0.4}}" --once
 
 ```
+
+커밋 프로픽 체크
